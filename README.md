@@ -29,7 +29,7 @@ etl-pipeline/
 
 A diferencia de un CSV descargado de antemano, este pipeline extrae los datos
 en el momento desde una API publica: [Jolpica-F1](https://github.com/jolpica/jolpica-f1)
-(sucesora de Ergast), consultando el historial de resultados de carrera de
+, consultando el historial de resultados de carrera de
 Franco Colapinto. No hace falta descargar nada a mano: el propio script pide
 los datos y genera `data/raw/dataset.csv` como una copia cruda antes de
 limpiarlo.
@@ -66,14 +66,14 @@ Carga, Validacion) y termina con "Pipeline ejecutado con exito."
 ### 1. Extraccion (`src/extract.py`)
 
 - Pide a `/drivers/colapinto/results.json` el historial completo de carreras.
-- Guarda una copia cruda, sin tipar, en `data/raw/dataset.csv` (esto permite
-  comparar despues el antes y el despues, en la etapa de validacion).
+- Guarda una copia cruda, (una tabla plana), en `data/raw/dataset.csv` (esto permite
+  comparar después el antes y el despues, en la etapa de validación).
 - Optimiza los tipos de datos sobre una copia en memoria:
-  - `season`, `round`, `grid`: downcast a enteros chicos.
+  - `season`, `round`, `grid`: simplifica a enteros chicos.
   - `position`: se convierte a `Int64` (con mayuscula), el tipo entero de
     pandas que admite nulos. Un `int` comun no puede tener `NaN`, y esta
     columna si puede quedar vacia (ver mas abajo).
-  - `points`: downcast a `float32`.
+  - `points`: simplifica a `float32`.
   - `constructor`, `status`: a `category` (pocos valores distintos que se
     repiten en cada fila).
 
@@ -119,7 +119,7 @@ cada columna (todo se relee como texto hasta que algo lo interpreta de
 nuevo) y no comprime. Parquet es un formato binario columnar que preserva
 los tipos optimizados en la extraccion, comprime el archivo, y es mas rapido
 de leer para un pipeline de Machine Learning posterior, porque permite leer
-columnas especificas sin procesar el archivo entero.
+columnas especificas sin procesar el archivo entero. Y es pedido en la consigna
 
 ## Sobre el .gitignore
 
